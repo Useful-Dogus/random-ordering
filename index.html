@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>랜덤 순서 매기기</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+
+      .container {
+        text-align: center;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+
+      label,
+      input,
+      button {
+        display: block;
+        margin: 10px auto;
+        font-size: 16px;
+      }
+
+      input {
+        padding: 5px;
+        width: 200px;
+        margin-right: 10px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+      }
+
+      li {
+        margin: 10px 0;
+        padding: 10px;
+        background: #e0e0e0;
+        border-radius: 5px;
+      }
+
+      .nameInputContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .deleteButton {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>랜덤 순서 매기기</h1>
+      <form id="teamForm">
+        <div id="nameInputs"></div>
+        <button type="button" id="addMemberButton">팀원 추가</button>
+      </form>
+      <button id="shuffleButton" style="display: none">순서 섞기</button>
+      <ul id="personList"></ul>
+    </div>
+    <script>
+      document.getElementById("addMemberButton").addEventListener("click", addMemberInput);
+      document.getElementById("shuffleButton").addEventListener("click", shuffleList);
+      document.getElementById("teamForm").addEventListener("keydown", function (event) {
+        if (event.isComposing || event.keyCode === 229) return;
+        if (event.key === "Enter") {
+          event.preventDefault();
+          addMemberInput();
+        }
+      });
+
+      function addMemberInput() {
+        const nameInputs = document.getElementById("nameInputs");
+        const inputContainer = document.createElement("div");
+        inputContainer.className = "nameInputContainer";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = `팀원 이름`;
+        input.required = true;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "삭제";
+        deleteButton.className = "deleteButton";
+        deleteButton.addEventListener("click", function () {
+          nameInputs.removeChild(inputContainer);
+          toggleShuffleButton();
+        });
+
+        inputContainer.appendChild(input);
+        inputContainer.appendChild(deleteButton);
+        nameInputs.appendChild(inputContainer);
+
+        // Show the shuffle button if there are at least two members
+        toggleShuffleButton();
+
+        // Focus on the new input field
+        input.focus();
+      }
+
+      function toggleShuffleButton() {
+        const inputs = document.getElementById("nameInputs").getElementsByTagName("input");
+        document.getElementById("shuffleButton").style.display = inputs.length > 1 ? "block" : "none";
+      }
+
+      function shuffleList() {
+        const nameInputs = document.querySelectorAll("#nameInputs input");
+        const personList = document.getElementById("personList");
+        const persons = Array.from(nameInputs).map((input) => input.value);
+        const shuffledPersons = shuffleArray(persons);
+
+        // Clear the current list
+        personList.innerHTML = "";
+
+        // Append shuffled persons
+        shuffledPersons.forEach((person) => {
+          const li = document.createElement("li");
+          li.textContent = person;
+          personList.appendChild(li);
+        });
+      }
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+    </script>
+  </body>
+</html>
