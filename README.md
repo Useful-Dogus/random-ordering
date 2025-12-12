@@ -15,6 +15,6 @@ This project is a simple web application that allows you to input team members' 
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/username/project-name.git](https://github.com/Useful-Dogus/random-ordering.git)
+   git clone https://github.com/Useful-Dogus/random-ordering.git
    ```
 2. Open the index.html file in your browser to start using the app.
